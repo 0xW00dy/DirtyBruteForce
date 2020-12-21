@@ -12,6 +12,11 @@ ufield   = "username"
 pfield   = "password"
 
 
+random_user_agent = False
+
+headers = {
+    "User-agent": "Dirty"
+}
 
 wlist    = []
 
@@ -29,11 +34,8 @@ def main():
     parser.add_argument('--ufield', nargs='?', help="Username field if different than 'username'")
     parser.add_argument('--pfield', nargs='?', help="Password field if different than 'password'")
     
-    parser.add_argument('--error', nargs='?')
-    
-    parser.add_argument('--user-agent', nargs='?', help="Set special user-agent")
-    
     args = parser.parse_args()
+
     try:
         url      = args["url"]
         username = args["username"]
@@ -106,15 +108,13 @@ def bruteforce():
         default_len = calculate_length(url, data)
         for word in wlist:
             data[pfield] = word
-            r = requests.post(url, data=data)
+            r = requests.post(url, data=data, headers=headers)
             if len(r.text) != default_len:
-                print(f"PASSWORD FOUND : {word}")
+                print(f"[~] PASSWORD FOUND : {word}")
                 break
         print("[~] Done")
     else:
         print("[~] URL can't be bruteforced.")
         
-    
-
 if __name__ == '__main__':
     main()
