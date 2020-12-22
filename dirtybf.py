@@ -53,7 +53,7 @@ def main():
         wordlist = args["wordlist"]
         print(f"Using wordlist: {wordlist}")
         
-        wlist = read_wordlist()
+        wlist = read_wordlist(wordlist)
         
         bruteforce()
         
@@ -77,13 +77,13 @@ def banner():
     print("Welcome to Dirty BF")
     print("[!] legal disclaimer: Usage of dirtybf for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program\n\n")
 
-def read_wordlist():
+def read_wordlist(wordlist):
     wlist = []
     try:
         with open(wordlist, 'r') as wl: # we try opening the file using UTF-8
             for line in wl:
                 wlist.append(line.strip())
-    except UnicodeDecodeError as UDE:
+    except UnicodeDecodeError:
         try:
             if len(wlist) != 0:
                 wlist = [] #we make sure the wordlist is empty
@@ -91,6 +91,7 @@ def read_wordlist():
                 for line in wl:
                     wlist.append(line.strip())
         except:
+            print("Problem in file encoding")
             raise UnicodeDecodeError
     return wlist
 
