@@ -21,7 +21,6 @@ headers = {
 wlist    = []
 
 
-
 def main():
     banner()
     
@@ -35,16 +34,24 @@ def main():
     parser.add_argument('--pfield', nargs='?', help="Password field if different than 'password'")
     
     args = parser.parse_args()
-
+    args = vars(args)
+    
+    try: 
+        ufield = args["ufield"]
+    except TypeError:
+        pass    
+    try:
+        pfield = args["pfield"]
+    except TypeError:
+        pass
+    
     try:
         url      = args["url"]
+        print(f"Attacking: {url}")
         username = args["username"]
+        print(f"Using username: {username}")
         wordlist = args["wordlist"]
-        try: 
-            ufield = args["ufield"]
-            pfield = args["pfield"]
-        except TypeError:
-            pass
+        print(f"Using wordlist: {wordlist}")
         
         wlist = read_wordlist()
         
