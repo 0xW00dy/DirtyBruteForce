@@ -4,15 +4,7 @@ import argparse
 import sys
 
 
-#gloabal variables
-
-
-
 random_user_agent = False
-
-
-
-
 
 
 def main():
