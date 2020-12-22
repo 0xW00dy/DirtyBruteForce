@@ -5,23 +5,25 @@ import sys
 
 
 #gloabal variables
-url      = ""
-username = ""
-wordlist = ""
-ufield   = "username"
-pfield   = "password"
+
 
 
 random_user_agent = False
 
-headers = {
-    "User-agent": "Dirty"
-}
 
-wlist    = []
+
+
 
 
 def main():
+    #Vars
+    url      = ""
+    username = ""
+    wordlist = ""
+    ufield   = "username"
+    pfield   = "password"
+    
+    
     banner()
     
     parser = argparse.ArgumentParser(description=("CLI Bruteforcer for login fields."))
@@ -55,7 +57,7 @@ def main():
         
         wlist = read_wordlist(wordlist)
         
-        bruteforce()
+        bruteforce(url, username, wlist, ufield, pfield)
         
     except TypeError:
         print("You must provide all needed parameters.")
@@ -105,7 +107,12 @@ def calculate_length(url, data):
     r = requests.post(url, data=data)
     return len(r.text)
     
-def bruteforce():
+def bruteforce(url, username, wlist, ufield, pfield, headers=None):
+    if headers == None:
+        headers = {
+            "User-agent": "Dirty"
+        }
+    
     data = {
         ufield: username,
         pfield: "placeholder" 
