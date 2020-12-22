@@ -51,7 +51,7 @@ def main():
         
         bruteforce(url, username, wlist, ufield, pfield)
         
-    except TypeError:
+    except:
         print("You must provide all needed parameters.")
         parser.print_help()
     
