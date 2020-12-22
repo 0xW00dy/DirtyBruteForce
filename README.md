@@ -39,3 +39,7 @@ optional arguments:
  
  Don't hesitate to PM me if you think a feature should be added and I'll do my best to add it !
  
+ # Install
+ 
+ ```pip install -r requirements.txt```
+ 
