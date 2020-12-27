@@ -20,40 +20,43 @@ def main():
     
     parser = argparse.ArgumentParser(description=("CLI Bruteforcer for login fields."))
     
-    parser.add_argument('-u', '--url', nargs='?', help="Set url to bruteforce (needed)")
-    parser.add_argument('-w', '--wordlist', nargs='?', help="Path to wordlist (needed)")
-    parser.add_argument('--username', nargs='?', help="Username to bruteforce (needed)")
+    parser.add_argument('-u', '--url', 
+                        nargs='?',
+                        help="Set url to bruteforce (needed)",
+                        required=True)
+    parser.add_argument('-w', '--wordlist',
+                        nargs='?',
+                        help="Path to wordlist (needed)",
+                        required=True)
+    parser.add_argument('--username',
+                        nargs='?',
+                        help="Username to bruteforce (needed)",
+                        required=True)
     
-    parser.add_argument('--ufield', nargs='?', help="Username field if different than 'username'")
-    parser.add_argument('--pfield', nargs='?', help="Password field if different than 'password'")
+    parser.add_argument('--ufield',
+                        nargs='?',
+                        help="Username field if different than 'username'",
+                        required=False)
+    parser.add_argument('--pfield',
+                        nargs='?',
+                        help="Password field if different than 'password'",
+                        required=False)
     
     args = parser.parse_args()
+    print(args)
     args = vars(args)
+    print(args)
     
-    try: 
-        ufield = args["ufield"]
-    except TypeError:
-        pass    
-    try:
-        pfield = args["pfield"]
-    except TypeError:
-        pass
+    url = args["url"]
+    wordlist = args["wordlist"]
+    username = args["username"]
     
-    try:
-        url      = args["url"]
-        print(f"Attacking: {url}")
-        username = args["username"]
-        print(f"Using username: {username}")
-        wordlist = args["wordlist"]
-        print(f"Using wordlist: {wordlist}")
-        
-        wlist = read_wordlist(wordlist)
-        
-        bruteforce(url, username, wlist, ufield, pfield)
-        
-    except:
-        print("You must provide all needed parameters.")
-        parser.print_help()
+    pfield = args["pfield"] if args["pfield"] != None else pfield
+    ufield = args["ufield"] if args["ufield"] != None else ufield
+    
+    wlist = read_wordlist(wordlist)
+    
+    bruteforce(url, username, wlist, ufield, pfield)
     
 
 def banner():
@@ -71,7 +74,7 @@ def banner():
     print("Welcome to Dirty BF")
     print("[!] legal disclaimer: Usage of dirtybf for attacking targets without prior mutual consent is illegal. It is the end user's responsibility to obey all applicable local, state and federal laws. Developers assume no liability and are not responsible for any misuse or damage caused by this program\n\n")
 
-def read_wordlist(wordlist):
+def read_wordlist(wordlist: str):
     wlist = []
     try:
         with open(wordlist, 'r') as wl: # we try opening the file using UTF-8
@@ -90,8 +93,9 @@ def read_wordlist(wordlist):
     return wlist
 
 def test_url(url, data):
+    status_codes = [200, 301, 302]
     r = requests.post(url, data=data)
-    if r.status_code == 200:
+    if r.status_code in status_codes:
         return True
     return False
 
@@ -99,7 +103,7 @@ def calculate_length(url, data):
     r = requests.post(url, data=data)
     return len(r.text)
     
-def bruteforce(url, username, wlist, ufield, pfield, headers=None):
+def bruteforce(url, username, wlist: list, ufield, pfield, headers=None):
     if headers == None:
         headers = {
             "User-agent": "Dirty"
