@@ -18,7 +18,8 @@ Usage of dirtybf for attacking targets without prior mutual consent is illegal. 
 # How to use
 
 ```
-usage: dirtybf.py [-h] -u [URL] -w [WORDLIST] --username [USERNAME] [--ufield [UFIELD]] [--pfield [PFIELD]]
+usage: dirtybf.py [-h] -u [URL] -w [WORDLIST] --username [USERNAME]
+                  [--ufield [UFIELD]] [--pfield [PFIELD]]
 
 CLI Bruteforcer for login fields.
 
