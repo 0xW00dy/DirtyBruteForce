@@ -116,6 +116,8 @@ def bruteforce(url, username, wlist: list, ufield, pfield, headers=None):
         pfield: "placeholder" 
     }
     
+    redirect_codes = [301, 302]
+    
     idx = 0
     if test_url(url, data):
         last_timeout = 0
@@ -140,6 +142,12 @@ def bruteforce(url, username, wlist: list, ufield, pfield, headers=None):
                 
                 print(f"[~] PASSWORD FOUND : {word}")
                 break
+            
+            if r.status_code in redirect_codes:
+                print(f"[~] Received redirection code {r.status_code}")
+                user_input = input(f"[~] Follow redirection ? (Y/N)")
+                if user_input.lower() == "y":
+                    print(r.text)
             
             last_timeout = 0
         print("[~] Done")
