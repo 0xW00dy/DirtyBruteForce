@@ -121,6 +121,8 @@ def bruteforce(url, username, wlist: list, ufield, pfield, headers=None):
     idx = 0
     if test_url(url, data):
         last_timeout = 0
+        follow_redirections = True
+        
         default_len = calculate_length(url, data)
         for word in wlist:
             data[pfield] = word
@@ -143,11 +145,16 @@ def bruteforce(url, username, wlist: list, ufield, pfield, headers=None):
                 print(f"[~] PASSWORD FOUND : {word}")
                 break
             
-            if r.status_code in redirect_codes:
+            if r.status_code in redirect_codes and follow_redirections:
                 print(f"[~] Received redirection code {r.status_code}")
                 user_input = input(f"[~] Follow redirection ? (Y/N)")
                 if user_input.lower() == "y":
                     print(r.text)
+                    print(f"[~] Password that caused redirection: {word}")
+                else:
+                    user_input = input("[~] Never follow redirections ? (Y/n) ")
+                    if user_input.lower() == 'y':
+                        follow_redirections = False
             
             last_timeout = 0
         print("[~] Done")
