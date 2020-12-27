@@ -43,9 +43,7 @@ def main():
                         required=False)
     
     args = parser.parse_args()
-    print(args)
     args = vars(args)
-    print(args)
     
     url = args["url"]
     wordlist = args["wordlist"]
@@ -94,9 +92,13 @@ def read_wordlist(wordlist: str):
 
 def test_url(url, data):
     status_codes = [200, 301, 302]
-    r = requests.post(url, data=data)
-    if r.status_code in status_codes:
-        return True
+    try:
+        r = requests.post(url, data=data)
+        if r.status_code in status_codes:
+                return True
+    except requests.exceptions.ConnectionError as e:
+        print(e)
+        print("[~] URL is not reachable")
     return False
 
 def calculate_length(url, data):
