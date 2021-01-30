@@ -93,9 +93,15 @@ def read_wordlist(wordlist: str):
 def test_url(url, data):
     status_codes = [200, 301, 302]
     try:
+        ret = False
         r = requests.post(url, data=data)
         if r.status_code in status_codes:
-                return True
+            print("[~] POST OK")
+            ret = True        
+        r = requests.get(url)
+        if r.status_code in status_codes:
+            print("[~] GET OK")
+        return ret
     except requests.exceptions.ConnectionError as e:
         print(e)
         print("[~] URL is not reachable")
