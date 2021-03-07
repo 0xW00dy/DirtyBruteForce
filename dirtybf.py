@@ -4,6 +4,7 @@ import argparse
 import sys
 import time
 
+
 random_user_agent = False
 
 
@@ -118,7 +119,6 @@ def bruteforce(url, username, wlist: list, ufield, pfield, headers=None):
     
     redirect_codes = [301, 302]
     
-    idx = 0
     if test_url(url, data):
         last_timeout = 0
         follow_redirections = True
@@ -127,7 +127,8 @@ def bruteforce(url, username, wlist: list, ufield, pfield, headers=None):
         for word in wlist:
             data[pfield] = word
             r = requests.post(url, data=data, headers=headers)
-            
+            print('{:s}\r'.format(''), end='', flush=True)
+            print('[~] Trying word: {:s}'.format(word), end='')
             while r.status_code == 429:
                 
                 timeout = last_timeout * 2 if last_timeout != 0 else 5
